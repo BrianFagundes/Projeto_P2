@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <link rel="stylesheet" href="./pesquisa.component.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A2BR Livros</title>
+  <link rel="icon" href="../../assets/Logotipos/p12.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+  <style>
+    /* Estilo padrão para o elemento <input> */
+    .form-control {
+      width: 100%;
+    }
+
+    /* Reduz o tamanho do <input> a partir de 1060px */
+    @media (max-width: 1060px) {
+      .form-control {
+        width: 90%; /* Por exemplo, pode ajustar o valor conforme necessário */
+      }
+    }
+
+    /* Reduz ainda mais o tamanho do <input> a partir de 992px */
+    @media (max-width: 992px) {
+      .form-control {
+        width: 80%; /* Por exemplo, pode ajustar o valor conforme necessário */
+      }
+    }
+  </style>
+
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <a (click)="redirectToHome()" class="navbar-brand">
+      <img src="../../assets/Imagens/logo_A2BR.jpeg" alt="CompreLivro Logo" width="150">
+    </a>
+    <div class="collapse navbar-collapse">
+      <form class="d-flex">
+        <input type="text" class="form-control" name="livroInput" id="livroInput" placeholder="Buscar livros" [(ngModel)]="livroInput">
+        <a id="buscarButton" class="btn btn__busca" (click)="redirectToPesquisa()">Buscar</a>
+
+      </form>
+    </div>   
+    <button class="navbar-toggler" type="button" (click)="toggleMenu()">
+      <img src="../../assets/Imagens/menuHamburguer.jpg" alt="Menu Hamburguer" style="width:50px;height:50px">
+    </button>
+    <div class="collapse navbar-collapse" [ngClass]="{ 'show': isMenuExpanded }" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" (click)="redirectToCadastro()">{{ isLoggedIn ? getEmailPrefix(loggedInUser) : 'Login' }}<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="redirectToCarrinho()">
+            <i class="fa fa-shopping-cart"></i>
+            <span class="badge badge-warning" id="lblCartCount">{{ carrinhoCount }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="navbar-toggler" style="width:100%">
+      <form class="d-flex">
+        <input type="text" class="form-control" name="livroInput" id="livroInput" placeholder="Buscar livros" [(ngModel)]="livroInput">
+        <a id="buscarButton" class="btn btn__busca" (click)="redirectToPesquisa()">Buscar</a>
+      </form>
+    </div>
+  </nav>
+
+
+
+
+ <div class="container mt-3">
+  <div class="row">
+    <div class="col-md-12">
+      <h3 class="text-center mb-3">Resultados da Pesquisa</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card mb-3">
+        <div class="card-header">
+          <h5 class="card-title">Pesquisa</h5>
+        </div>
+        <div class="card-body">
+          <!-- Product List -->
+    <div class="col-lg-9">
+      <!-- Product Cards -->
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="col" *ngFor="let produto of products">
+          <div class="card h-100"style="max-width: 150px;">
+            <img [src]="produto.imagem" class="card-img-top" alt="..." style="max-height: 200px; max-width: 150px;">
+            <div class="card-body">
+              <h5 class="card-title">{{ produto.nome }}</h5>
+              <p class="card-text">{{ produto.autor }}</p>
+              <p class="card-text">{{ produto.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}</p>
+            </div>
+            <div class="card-footer">
+              <a (click)="redirectToDetalhe(produto.id)" class="btn btn__produto">Comprar</a>
+            </div>
+          </div>
+        </div>        
+      </div>
+       
+
+        <!-- End Product Card Example -->
+        
+        <!-- Repeat the product card example for each book in the store -->
+
+      </div>
+      <!-- End Product Cards -->
+    </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<footer class="footer text-white pt-5 pb-4" style="margin-top: 200px;">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3 col-12">
+        <h5 class="text-uppercase mb-3">A2BR Livros</h5>
+        <p>A2BR Livros é uma loja online de livros. Acesse nossa plataforma e encontre os melhores títulos para o seu entretenimento e aprendizado.</p>
+      </div>
+      <div class="col-md-3 col-12">
+        <h5 class="footer__subtitulo text-uppercase mb-3">Links úteis</h5>
+        <ul class="footer__list list-unstyled">
+          <li><a class="footer__list__a" href="#">Sobre nós</a></li>
+          <li><a class="footer__list__a" href="#">Política de privacidade</a></li>
+          <li><a class="footer__list__a" href="#">Termos de uso</a></li>
+          <li><a class="footer__list__a" href="#">Fale conosco</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 col-12">
+        <h5 class="text-uppercase mb-3">Siga-nos</h5>
+        <ul class="list-unstyled">
+          <li><a class="footer__list__a" href="#">Facebook</a></li>
+          <li><a class="footer__list__a" href="#">Instagram</a></li>
+          <li><a class="footer__list__a" href="#">Twitter</a></li>
+          <li><a class="footer__list__a" href="#">YouTube</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 col-12">
+        <h5 class="text-uppercase mb-3">Contato</h5>
+        <ul class="list-unstyled">
+          <li><i class="fas fa-envelope mr-2"></i>A2BR@gmail.com</li>
+          <li><i class="fas fa-phone mr-2"></i>(11) 1234-5678</li>
+          <li><i class="fas fa-map-marker-alt mr-2"></i>São Paulo, Brasil</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid__2 bg-light pt-2 pb-2">
+    <div class="container-fluid__2__row">
+      <div class="container-fluid__2__col col-md-6 col-12">
+        <p class="container-fluid__2__text-muted mb-md-0 mb-3">©2023 A2BR. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  <!-- Bootstrap core JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>18:38 05/04/2023
+</body>
+</html>
+
